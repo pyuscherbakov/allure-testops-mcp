@@ -181,6 +181,7 @@ export function createTestCaseTools(
           sort: { type: "array", items: { type: "string" } },
         },
       },
+      annotations: { readOnlyHint: true },
     },
     {
       name: "search_test_cases",
@@ -215,6 +216,7 @@ export function createTestCaseTools(
         },
         required: ["rql"],
       },
+      annotations: { readOnlyHint: true },
     },
     {
       name: "get_test_case",
@@ -224,6 +226,7 @@ export function createTestCaseTools(
         properties: { id: { type: "number" } },
         required: ["id"],
       },
+      annotations: { readOnlyHint: true },
     },
     {
       name: "create_test_case",
@@ -262,6 +265,7 @@ export function createTestCaseTools(
         properties: { id: { type: "number" } },
         required: ["id"],
       },
+      annotations: { readOnlyHint: false, destructiveHint: true },
     },
     {
       name: "add_test_case_tags_bulk",
@@ -328,6 +332,7 @@ export function createTestCaseTools(
         properties: { testCaseId: { type: "number" } },
         required: ["testCaseId"],
       },
+      annotations: { readOnlyHint: true },
     },
     {
       name: "get_test_case_history",
@@ -342,6 +347,7 @@ export function createTestCaseTools(
         },
         required: ["id"],
       },
+      annotations: { readOnlyHint: true },
     },
     {
       name: "get_test_case_scenario",
@@ -351,6 +357,7 @@ export function createTestCaseTools(
         properties: { id: { type: "number" } },
         required: ["id"],
       },
+      annotations: { readOnlyHint: true },
     },
     {
       name: "get_test_case_tags",
@@ -360,6 +367,7 @@ export function createTestCaseTools(
         properties: { testCaseId: { type: "number" } },
         required: ["testCaseId"],
       },
+      annotations: { readOnlyHint: true },
     },
     {
       name: "set_test_case_tags",
@@ -381,6 +389,7 @@ export function createTestCaseTools(
         properties: { testCaseId: { type: "number" } },
         required: ["testCaseId"],
       },
+      annotations: { readOnlyHint: true },
     },
     {
       name: "set_test_case_issues",
@@ -420,6 +429,7 @@ export function createTestCaseTools(
           sort: { type: "array", items: { type: "string" } },
         },
       },
+      annotations: { readOnlyHint: true },
     },
     {
       name: "list_custom_field_values",
@@ -442,6 +452,7 @@ export function createTestCaseTools(
         },
         required: ["customFieldId"],
       },
+      annotations: { readOnlyHint: true },
     },
     {
       name: "get_test_case_custom_fields",
@@ -458,6 +469,7 @@ export function createTestCaseTools(
         },
         required: ["testCaseId"],
       },
+      annotations: { readOnlyHint: true },
     },
     {
       name: "set_test_case_custom_fields",
@@ -544,6 +556,7 @@ export function createTestCaseTools(
         },
         required: ["valueId"],
       },
+      annotations: { readOnlyHint: false, destructiveHint: true },
     },
     {
       name: "rename_custom_field_value",
@@ -577,6 +590,7 @@ export function createTestCaseTools(
         },
         required: ["customFieldId", "sourceValueId", "targetValueId"],
       },
+      annotations: { readOnlyHint: false, destructiveHint: true },
     },
     {
       name: "search_test_cases_by_missing_field",
@@ -602,6 +616,7 @@ export function createTestCaseTools(
         },
         required: ["fieldName"],
       },
+      annotations: { readOnlyHint: true },
     },
   ];
 

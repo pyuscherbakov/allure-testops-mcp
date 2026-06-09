@@ -6,7 +6,7 @@ import { CallToolRequestSchema, ListToolsRequestSchema } from "@modelcontextprot
 import { readFileSync } from "node:fs";
 import { TokenManager } from "./auth.js";
 import { AllureApiClient } from "./client.js";
-import { buildToolRegistry, requiredEnv } from "./server-bootstrap.js";
+import { buildToolRegistry, parseReadOnlyFlag, requiredEnv } from "./server-bootstrap.js";
 
 function formatToolResult(result: unknown): string {
   if (result === undefined) {
@@ -47,10 +47,11 @@ async function main(): Promise<void> {
   const baseUrl = requiredEnv("ALLURE_TESTOPS_URL");
   const apiToken = requiredEnv("ALLURE_TOKEN");
   const defaultProjectId = parseOptionalProjectId(process.env.ALLURE_PROJECT_ID);
+  const readOnly = parseReadOnlyFlag(process.env.ALLURE_READ_ONLY);
 
   const tokenManager = new TokenManager({ baseUrl, apiToken });
   const client = new AllureApiClient({ baseUrl, tokenManager, defaultProjectId });
-  const { tools, handlers } = buildToolRegistry(client);
+  const { tools, handlers } = buildToolRegistry(client, { readOnly });
   const serverVersion = getServerVersion();
 
   const server = new Server(
@@ -101,7 +102,9 @@ async function main(): Promise<void> {
 
   const transport = new StdioServerTransport();
   await server.connect(transport);
-  console.error("Allure TestOps MCP server started.");
+  console.error(
+    `Allure TestOps MCP server started${readOnly ? " (read-only mode)" : ""}.`,
+  );
 }
 
 main().catch((error) => {

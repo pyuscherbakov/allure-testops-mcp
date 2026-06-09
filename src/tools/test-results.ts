@@ -31,6 +31,7 @@ export function createTestResultTools(
         },
         required: ["launchId"],
       },
+      annotations: { readOnlyHint: true },
     },
     {
       name: "search_test_results",
@@ -50,6 +51,7 @@ export function createTestResultTools(
         },
         required: ["rql"],
       },
+      annotations: { readOnlyHint: true },
     },
     {
       name: "get_test_result",
@@ -59,6 +61,7 @@ export function createTestResultTools(
         properties: { id: { type: "number" } },
         required: ["id"],
       },
+      annotations: { readOnlyHint: true },
     },
     {
       name: "create_test_result",
@@ -94,6 +97,7 @@ export function createTestResultTools(
         },
         required: ["id"],
       },
+      annotations: { readOnlyHint: true },
     },
     {
       name: "assign_test_result",

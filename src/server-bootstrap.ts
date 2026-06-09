@@ -13,8 +13,20 @@ export function requiredEnv(name: string): string {
   return value;
 }
 
+export function parseReadOnlyFlag(value: string | undefined): boolean {
+  if (!value) {
+    return false;
+  }
+  return ["true", "1", "yes"].includes(value.trim().toLowerCase());
+}
+
+export interface BuildToolRegistryOptions {
+  readOnly?: boolean;
+}
+
 export function buildToolRegistry(
   client: AllureApiClient,
+  options: BuildToolRegistryOptions = {},
 ): { tools: McpToolDefinition[]; handlers: Map<string, ToolHandler> } {
   const bundles = [
     createTestCaseTools(client),
@@ -26,9 +38,17 @@ export function buildToolRegistry(
   const tools: McpToolDefinition[] = [];
   const handlers = new Map<string, ToolHandler>();
   for (const bundle of bundles) {
-    tools.push(...bundle.tools);
-    for (const [name, handler] of Object.entries(bundle.handlers)) {
-      handlers.set(name, handler);
+    for (const tool of bundle.tools) {
+      // Fail-closed: in read-only mode expose only tools explicitly marked read-only.
+      if (options.readOnly && tool.annotations?.readOnlyHint !== true) {
+        continue;
+      }
+      const handler = bundle.handlers[tool.name];
+      if (!handler) {
+        continue;
+      }
+      tools.push(tool);
+      handlers.set(tool.name, handler);
     }
   }
 
