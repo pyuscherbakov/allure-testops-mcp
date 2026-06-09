@@ -37,6 +37,41 @@ const MUTATING_SAMPLE = [
   "run_test_plan",
 ];
 
+// Exhaustive expected set of read-only tools. Pinning the full set (not just a
+// sample) catches mis-annotation in both directions: a mutating tool wrongly
+// marked readOnlyHint: true, or a read tool that lost its annotation.
+const EXPECTED_READ_ONLY = [
+  // test cases
+  "list_test_cases",
+  "search_test_cases",
+  "get_test_case",
+  "get_test_case_overview",
+  "get_test_case_history",
+  "get_test_case_scenario",
+  "get_test_case_tags",
+  "get_test_case_issues",
+  "list_project_custom_fields",
+  "list_custom_field_values",
+  "get_test_case_custom_fields",
+  "search_test_cases_by_missing_field",
+  // launches
+  "list_launches",
+  "search_launches",
+  "get_launch",
+  "get_launch_statistic",
+  "get_launch_progress",
+  // test results
+  "list_test_results",
+  "search_test_results",
+  "get_test_result",
+  "get_test_result_history",
+  // test plans
+  "list_test_plans",
+  "get_test_plan",
+];
+
+const EXPECTED_TOTAL_TOOLS = 53;
+
 describe("buildToolRegistry", () => {
   it("exposes both read and mutating tools by default", () => {
     const client = createMockClient(1);
@@ -86,6 +121,21 @@ describe("buildToolRegistry", () => {
     const readOnly = buildToolRegistry(client as never, { readOnly: true });
 
     expect(readOnly.tools.length).toBeLessThan(full.tools.length);
+  });
+
+  it("read-only registry exposes exactly the expected set of tools", () => {
+    const client = createMockClient(1);
+    const full = buildToolRegistry(client as never);
+    const readOnly = buildToolRegistry(client as never, { readOnly: true });
+
+    // Full registry size is pinned so adding/removing tools is a conscious change.
+    expect(full.tools).toHaveLength(EXPECTED_TOTAL_TOOLS);
+
+    // The read-only set must match exactly — not merely be a subset. This fails
+    // if a mutating tool is accidentally marked readOnlyHint: true.
+    const readOnlyNames = readOnly.tools.map((tool) => tool.name).sort();
+    expect(readOnlyNames).toEqual([...EXPECTED_READ_ONLY].sort());
+    expect(readOnly.handlers.size).toBe(EXPECTED_READ_ONLY.length);
   });
 });
 
