@@ -59,15 +59,27 @@ ALLURE_TESTOPS_URL=https://allure-testops.instance.com/
 ALLURE_TOKEN=your-api-token
 # Optional default project:
 # ALLURE_PROJECT_ID=37
+# Optional read-only mode:
+# ALLURE_READ_ONLY=true
 ```
 
 - `ALLURE_TESTOPS_URL` required
 - `ALLURE_TOKEN` required
 - `ALLURE_PROJECT_ID` optional
+- `ALLURE_READ_ONLY` optional (default off)
 
 If `ALLURE_PROJECT_ID` is not set, tools that require project scope must receive:
 - `projectId`, or
 - `projectName` (resolved via `/api/project/suggest`)
+
+### Read-only mode
+
+Set `ALLURE_READ_ONLY=true` (accepts `true`/`1`/`yes`) to expose only read-only tools.
+All mutating tools — `create_*`, `update_*`, `delete_*`, `set_*`, `add_*`, `remove_*`,
+`bulk_*`, `restore_test_case`, `rename_custom_field_value`, `merge_custom_field_values`,
+`close_launch`, `reopen_launch`, `assign_test_result`, `resolve_test_result`, `run_test_plan` —
+are removed from the tool list and cannot be invoked. Recommended when the server only needs to
+read from Allure TestOps, to limit the blast radius of the API token.
 
 ## Run Locally
 

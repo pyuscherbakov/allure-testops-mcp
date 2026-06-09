@@ -1,3 +1,8 @@
+export interface McpToolAnnotations {
+  readOnlyHint?: boolean;
+  destructiveHint?: boolean;
+}
+
 export interface McpToolDefinition {
   name: string;
   description: string;
@@ -7,6 +12,7 @@ export interface McpToolDefinition {
     required?: string[];
     additionalProperties?: boolean;
   };
+  annotations?: McpToolAnnotations;
 }
 
 export type ToolHandler = (args: unknown) => Promise<unknown>;

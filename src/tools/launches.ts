@@ -35,6 +35,7 @@ export function createLaunchTools(
           sort: { type: "array", items: { type: "string" } },
         },
       },
+      annotations: { readOnlyHint: true },
     },
     {
       name: "search_launches",
@@ -54,6 +55,7 @@ export function createLaunchTools(
         },
         required: ["rql"],
       },
+      annotations: { readOnlyHint: true },
     },
     {
       name: "get_launch",
@@ -63,6 +65,7 @@ export function createLaunchTools(
         properties: { id: { type: "number" } },
         required: ["id"],
       },
+      annotations: { readOnlyHint: true },
     },
     {
       name: "create_launch",
@@ -94,6 +97,7 @@ export function createLaunchTools(
         properties: { id: { type: "number" } },
         required: ["id"],
       },
+      annotations: { readOnlyHint: false, destructiveHint: true },
     },
     {
       name: "close_launch",
@@ -121,6 +125,7 @@ export function createLaunchTools(
         properties: { id: { type: "number" } },
         required: ["id"],
       },
+      annotations: { readOnlyHint: true },
     },
     {
       name: "get_launch_progress",
@@ -130,6 +135,7 @@ export function createLaunchTools(
         properties: { id: { type: "number" } },
         required: ["id"],
       },
+      annotations: { readOnlyHint: true },
     },
     {
       name: "add_test_cases_to_launch",

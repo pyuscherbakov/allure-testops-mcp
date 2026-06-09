@@ -32,6 +32,7 @@ export function createTestPlanTools(
           sort: { type: "array", items: { type: "string" } },
         },
       },
+      annotations: { readOnlyHint: true },
     },
     {
       name: "get_test_plan",
@@ -41,6 +42,7 @@ export function createTestPlanTools(
         properties: { id: { type: "number" } },
         required: ["id"],
       },
+      annotations: { readOnlyHint: true },
     },
     {
       name: "create_test_plan",
@@ -72,6 +74,7 @@ export function createTestPlanTools(
         properties: { id: { type: "number" } },
         required: ["id"],
       },
+      annotations: { readOnlyHint: false, destructiveHint: true },
     },
     {
       name: "run_test_plan",

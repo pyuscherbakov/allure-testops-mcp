@@ -5,7 +5,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { TokenManager } from "../src/auth.js";
 import { AllureApiClient } from "../src/client.js";
-import { buildToolRegistry, requiredEnv } from "../src/server-bootstrap.js";
+import { buildToolRegistry, parseReadOnlyFlag, requiredEnv } from "../src/server-bootstrap.js";
 
 const DEFAULT_PORT = 3333;
 
@@ -963,10 +963,11 @@ async function main(): Promise<void> {
   const apiToken = requiredEnv("ALLURE_TOKEN");
   const defaultProjectId = parseOptionalProjectId(process.env.ALLURE_PROJECT_ID);
   const port = parsePort(process.env.DEV_UI_PORT);
+  const readOnly = parseReadOnlyFlag(process.env.ALLURE_READ_ONLY);
 
   const tokenManager = new TokenManager({ baseUrl, apiToken });
   const client = new AllureApiClient({ baseUrl, tokenManager, defaultProjectId });
-  const { tools, handlers } = buildToolRegistry(client);
+  const { tools, handlers } = buildToolRegistry(client, { readOnly });
 
   const server = createServer(async (req, res) => {
     const method = req.method ?? "";
@@ -1022,7 +1023,9 @@ async function main(): Promise<void> {
   });
 
   server.listen(port, () => {
-    console.error(`Allure MCP Local Debug UI started: http://localhost:${port}`);
+    console.error(
+      `Allure MCP Local Debug UI started: http://localhost:${port}${readOnly ? " (read-only mode)" : ""}`,
+    );
   });
 }
 
