@@ -15,6 +15,25 @@ Run in dev mode:
 npm run dev
 ```
 
+### Pre-commit hooks
+
+This repo uses [pre-commit](https://pre-commit.com) for basic file hygiene and to
+run ESLint before each commit. Install the hook once after cloning:
+
+```bash
+pipx install pre-commit   # or: brew install pre-commit / pip install pre-commit
+pre-commit install
+```
+
+Run against the whole repo manually:
+
+```bash
+pre-commit run --all-files
+```
+
+The ESLint hook needs the project's `node_modules`, so run `npm install` first.
+Configuration lives in [`.pre-commit-config.yaml`](.pre-commit-config.yaml).
+
 Run smoke test:
 
 ```bash

@@ -1,6 +1,6 @@
 # System Prompt Template (Token-Saving)
 
-Use this guide when your MCP client supports a custom system prompt.  
+Use this guide when your MCP client supports a custom system prompt.
 Goal: reduce repetitive discovery calls by giving the model stable defaults and cached project metadata up front.
 
 ## When This Helps

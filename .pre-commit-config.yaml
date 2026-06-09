@@ -1,0 +1,32 @@
+# See https://pre-commit.com for usage.
+# Install locally: pre-commit install
+# Run on all files: pre-commit run --all-files
+ci:
+  autoupdate_schedule: monthly
+  # eslint needs the project's node_modules; pre-commit.ci has no npm toolchain,
+  # so it runs only on developer machines and in GitHub Actions CI.
+  skip:
+    - eslint
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: mixed-line-ending
+        args: [--fix=lf]
+      - id: check-merge-conflict
+      - id: check-added-large-files
+      - id: check-yaml
+      - id: check-json
+        exclude: ^tsconfig\.json$
+
+  - repo: local
+    hooks:
+      - id: eslint
+        name: eslint (npm run lint)
+        entry: npm run lint
+        language: system
+        types: [ts]
+        pass_filenames: false
