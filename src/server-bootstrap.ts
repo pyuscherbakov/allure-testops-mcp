@@ -1,5 +1,6 @@
 import { AllureApiClient } from "./client.js";
 import { createLaunchTools } from "./tools/launches.js";
+import { createSharedStepTools } from "./tools/shared-steps.js";
 import { createTestCaseTools } from "./tools/test-cases.js";
 import { createTestPlanTools } from "./tools/test-plans.js";
 import { createTestResultTools } from "./tools/test-results.js";
@@ -30,6 +31,7 @@ export function buildToolRegistry(
 ): { tools: McpToolDefinition[]; handlers: Map<string, ToolHandler> } {
   const bundles = [
     createTestCaseTools(client),
+    createSharedStepTools(client),
     createLaunchTools(client),
     createTestResultTools(client),
     createTestPlanTools(client),

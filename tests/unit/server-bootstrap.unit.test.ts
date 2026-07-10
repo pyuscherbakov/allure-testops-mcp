@@ -69,9 +69,12 @@ const EXPECTED_READ_ONLY = [
   // test plans
   "list_test_plans",
   "get_test_plan",
+  // shared steps
+  "get_shared_step",
+  "get_shared_step_steps",
 ];
 
-const EXPECTED_TOTAL_TOOLS = 54;
+const EXPECTED_TOTAL_TOOLS = 56;
 
 describe("buildToolRegistry", () => {
   it("exposes both read and mutating tools by default", () => {

@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-03-02T23:51:53.187Z",
-  "totalTools": 47,
+  "generatedAt": "2026-07-10T12:43:45.885Z",
+  "totalTools": 56,
   "categories": [
     {
       "name": "Test Cases",
@@ -37,11 +37,14 @@
                 }
               }
             }
+          },
+          "annotations": {
+            "readOnlyHint": true
           }
         },
         {
           "name": "search_test_cases",
-          "description": "Search test cases by AQL query.",
+          "description": "Search test cases by RQL query. RQL examples: cf[\"Feature\"] = \"Auth\" — match custom field value; cf[\"Feature\"] is empty — field not set; not cf[\"Feature\"] = \"Auth\" — negation; cf[\"Suite\"] = \"API\" and cf[\"Feature\"] is empty — combined conditions; name ~ \"login\" — name contains substring; tag = \"smoke\" — filter by tag. Use page/size for pagination; the API may truncate large result sets.",
           "inputSchema": {
             "type": "object",
             "properties": {
@@ -53,13 +56,16 @@
                 "description": "Project name (alternative to projectId)."
               },
               "rql": {
-                "type": "string"
+                "type": "string",
+                "description": "RQL query string. Operators: = (equals), ~ (contains), is empty (field not set), not (negation), and/or (combinators). Custom field syntax: cf[\"FieldName\"]. Example: cf[\"Feature\"] = \"Auth\""
               },
               "page": {
-                "type": "number"
+                "type": "number",
+                "description": "Page number (0-based)."
               },
               "size": {
-                "type": "number"
+                "type": "number",
+                "description": "Page size (default varies by server)."
               },
               "sort": {
                 "type": "array",
@@ -71,6 +77,9 @@
             "required": [
               "rql"
             ]
+          },
+          "annotations": {
+            "readOnlyHint": true
           }
         },
         {
@@ -86,6 +95,9 @@
             "required": [
               "id"
             ]
+          },
+          "annotations": {
+            "readOnlyHint": true
           }
         },
         {
@@ -106,7 +118,7 @@
         },
         {
           "name": "update_test_case",
-          "description": "Update an existing test case. payload.customFields supports values like { customField: { id }, id, name }.",
+          "description": "Update an existing test case. WARNING: payload.customFields REPLACES all custom fields — any field not included will be removed. To update a single custom field safely, use set_test_case_custom_fields or bulk_set_test_case_custom_fields instead. payload.customFields supports values like { customField: { id }, id, name }.",
           "inputSchema": {
             "type": "object",
             "properties": {
@@ -137,6 +149,10 @@
             "required": [
               "id"
             ]
+          },
+          "annotations": {
+            "readOnlyHint": false,
+            "destructiveHint": true
           }
         },
         {
@@ -256,6 +272,9 @@
             "required": [
               "testCaseId"
             ]
+          },
+          "annotations": {
+            "readOnlyHint": true
           }
         },
         {
@@ -283,6 +302,9 @@
             "required": [
               "id"
             ]
+          },
+          "annotations": {
+            "readOnlyHint": true
           }
         },
         {
@@ -298,6 +320,27 @@
             "required": [
               "id"
             ]
+          },
+          "annotations": {
+            "readOnlyHint": true
+          }
+        },
+        {
+          "name": "get_test_case_steps",
+          "description": "Get design-time scenario steps for a test case (works for manual test cases where get_test_case_scenario returns empty; steps may reference shared steps via sharedStepId).",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          },
+          "annotations": {
+            "readOnlyHint": true
           }
         },
         {
@@ -313,6 +356,9 @@
             "required": [
               "testCaseId"
             ]
+          },
+          "annotations": {
+            "readOnlyHint": true
           }
         },
         {
@@ -350,6 +396,9 @@
             "required": [
               "testCaseId"
             ]
+          },
+          "annotations": {
+            "readOnlyHint": true
           }
         },
         {
@@ -418,6 +467,9 @@
                 }
               }
             }
+          },
+          "annotations": {
+            "readOnlyHint": true
           }
         },
         {
@@ -461,6 +513,9 @@
             "required": [
               "customFieldId"
             ]
+          },
+          "annotations": {
+            "readOnlyHint": true
           }
         },
         {
@@ -483,11 +538,14 @@
             "required": [
               "testCaseId"
             ]
+          },
+          "annotations": {
+            "readOnlyHint": true
           }
         },
         {
           "name": "set_test_case_custom_fields",
-          "description": "Add custom field values for a test case via bulk API. Supports grouped values [{ customField: { id }, values: [{ id|name }] }] and flat values [{ id|name, customField: { id } }].",
+          "description": "Add custom field values for a test case via bulk API. NOTE: This ADDS values without removing existing ones. For multi-select fields, the test case may end up with both old and new values. To replace values, use remove_test_case_custom_fields first, then this tool. Or use bulk_set_test_case_custom_fields with mode=\"replace\". Supports grouped values [{ customField: { id }, values: [{ id|name }] }] and flat values [{ id|name, customField: { id } }].",
           "inputSchema": {
             "type": "object",
             "properties": {
@@ -512,6 +570,251 @@
               "testCaseId",
               "payload"
             ]
+          }
+        },
+        {
+          "name": "remove_test_case_custom_fields",
+          "description": "Remove custom field values from one or multiple test cases via bulk API. Pass the custom field IDs whose values should be cleared from the specified test cases.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "projectId": {
+                "type": "number"
+              },
+              "projectName": {
+                "type": "string",
+                "description": "Project name (alternative to projectId)."
+              },
+              "testCaseId": {
+                "type": "number",
+                "description": "Single test case ID."
+              },
+              "testCaseIds": {
+                "type": "array",
+                "items": {
+                  "type": "number"
+                },
+                "description": "Multiple test case IDs."
+              },
+              "customFieldId": {
+                "type": "number",
+                "description": "Single custom field ID to clear."
+              },
+              "customFieldIds": {
+                "type": "array",
+                "items": {
+                  "type": "number"
+                },
+                "description": "Multiple custom field IDs to clear."
+              }
+            }
+          }
+        },
+        {
+          "name": "bulk_set_test_case_custom_fields",
+          "description": "Set custom field values on multiple test cases at once. When mode is \"replace\" (default), existing values for the specified fields are removed before adding new ones, preventing unintended data accumulation. When mode is \"add\", values are added without removing existing ones. Payload format: [{ customField: { id }, values: [{ id|name }] }] or [{ id|name, customField: { id } }].",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "projectId": {
+                "type": "number"
+              },
+              "projectName": {
+                "type": "string",
+                "description": "Project name (alternative to projectId)."
+              },
+              "testCaseId": {
+                "type": "number",
+                "description": "Single test case ID."
+              },
+              "testCaseIds": {
+                "type": "array",
+                "items": {
+                  "type": "number"
+                },
+                "description": "Multiple test case IDs."
+              },
+              "mode": {
+                "type": "string",
+                "enum": [
+                  "replace",
+                  "add"
+                ],
+                "description": "\"replace\" (default): removes existing values for the specified fields before adding. \"add\": appends without removing."
+              },
+              "payload": {
+                "type": "array",
+                "items": {
+                  "type": "object"
+                }
+              }
+            },
+            "required": [
+              "payload"
+            ]
+          }
+        },
+        {
+          "name": "delete_custom_field_value",
+          "description": "Delete a custom field value definition. The value must not be in use by any test cases. Use this to clean up orphaned values after reorganizing test cases.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "valueId": {
+                "type": "number",
+                "description": "The ID of the custom field value to delete."
+              }
+            },
+            "required": [
+              "valueId"
+            ]
+          },
+          "annotations": {
+            "readOnlyHint": false,
+            "destructiveHint": true
+          }
+        },
+        {
+          "name": "rename_custom_field_value",
+          "description": "Rename a custom field value. All test cases using this value will automatically reflect the new name.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "valueId": {
+                "type": "number",
+                "description": "The ID of the custom field value to rename."
+              },
+              "name": {
+                "type": "string",
+                "description": "The new name for the value."
+              }
+            },
+            "required": [
+              "valueId",
+              "name"
+            ]
+          }
+        },
+        {
+          "name": "merge_custom_field_values",
+          "description": "Merge two custom field values: reassign all test cases from the source value to the target value, then delete the source value. Useful for consolidating duplicate or similar values.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "projectId": {
+                "type": "number"
+              },
+              "projectName": {
+                "type": "string",
+                "description": "Project name (alternative to projectId)."
+              },
+              "customFieldId": {
+                "type": "number",
+                "description": "The custom field ID (e.g. -2 for Feature)."
+              },
+              "sourceValueId": {
+                "type": "number",
+                "description": "The value to merge FROM (will be deleted)."
+              },
+              "targetValueId": {
+                "type": "number",
+                "description": "The value to merge INTO (will be kept)."
+              }
+            },
+            "required": [
+              "customFieldId",
+              "sourceValueId",
+              "targetValueId"
+            ]
+          },
+          "annotations": {
+            "readOnlyHint": false,
+            "destructiveHint": true
+          }
+        },
+        {
+          "name": "search_test_cases_by_missing_field",
+          "description": "Find test cases where a specific custom field is not set. Convenience wrapper that builds the RQL query cf[\"FieldName\"] is empty.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "projectId": {
+                "type": "number"
+              },
+              "projectName": {
+                "type": "string",
+                "description": "Project name (alternative to projectId)."
+              },
+              "fieldName": {
+                "type": "string",
+                "description": "The custom field name (e.g. \"Feature\", \"Suite\")."
+              },
+              "additionalRql": {
+                "type": "string",
+                "description": "Optional extra RQL filter to combine with the missing-field condition using AND."
+              },
+              "page": {
+                "type": "number",
+                "description": "Page number (0-based)."
+              },
+              "size": {
+                "type": "number",
+                "description": "Page size."
+              },
+              "sort": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "required": [
+              "fieldName"
+            ]
+          },
+          "annotations": {
+            "readOnlyHint": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "Shared Steps",
+      "tools": [
+        {
+          "name": "get_shared_step",
+          "description": "Get a shared step by ID (name and metadata).",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          },
+          "annotations": {
+            "readOnlyHint": true
+          }
+        },
+        {
+          "name": "get_shared_step_steps",
+          "description": "Get the steps that make up a shared step. Use to expand sharedStepId references returned by get_test_case_steps.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          },
+          "annotations": {
+            "readOnlyHint": true
           }
         }
       ]
@@ -551,6 +854,9 @@
                 }
               }
             }
+          },
+          "annotations": {
+            "readOnlyHint": true
           }
         },
         {
@@ -585,6 +891,9 @@
             "required": [
               "rql"
             ]
+          },
+          "annotations": {
+            "readOnlyHint": true
           }
         },
         {
@@ -600,6 +909,9 @@
             "required": [
               "id"
             ]
+          },
+          "annotations": {
+            "readOnlyHint": true
           }
         },
         {
@@ -651,6 +963,10 @@
             "required": [
               "id"
             ]
+          },
+          "annotations": {
+            "readOnlyHint": false,
+            "destructiveHint": true
           }
         },
         {
@@ -696,6 +1012,9 @@
             "required": [
               "id"
             ]
+          },
+          "annotations": {
+            "readOnlyHint": true
           }
         },
         {
@@ -711,6 +1030,9 @@
             "required": [
               "id"
             ]
+          },
+          "annotations": {
+            "readOnlyHint": true
           }
         },
         {
@@ -789,6 +1111,9 @@
             "required": [
               "launchId"
             ]
+          },
+          "annotations": {
+            "readOnlyHint": true
           }
         },
         {
@@ -823,6 +1148,9 @@
             "required": [
               "rql"
             ]
+          },
+          "annotations": {
+            "readOnlyHint": true
           }
         },
         {
@@ -838,6 +1166,9 @@
             "required": [
               "id"
             ]
+          },
+          "annotations": {
+            "readOnlyHint": true
           }
         },
         {
@@ -901,6 +1232,9 @@
             "required": [
               "id"
             ]
+          },
+          "annotations": {
+            "readOnlyHint": true
           }
         },
         {
@@ -977,6 +1311,9 @@
                 }
               }
             }
+          },
+          "annotations": {
+            "readOnlyHint": true
           }
         },
         {
@@ -992,6 +1329,9 @@
             "required": [
               "id"
             ]
+          },
+          "annotations": {
+            "readOnlyHint": true
           }
         },
         {
@@ -1043,6 +1383,10 @@
             "required": [
               "id"
             ]
+          },
+          "annotations": {
+            "readOnlyHint": false,
+            "destructiveHint": true
           }
         },
         {

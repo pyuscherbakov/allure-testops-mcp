@@ -3,6 +3,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { createLaunchTools } from "../src/tools/launches.js";
+import { createSharedStepTools } from "../src/tools/shared-steps.js";
 import { createTestCaseTools } from "../src/tools/test-cases.js";
 import { createTestPlanTools } from "../src/tools/test-plans.js";
 import { createTestResultTools } from "../src/tools/test-results.js";
@@ -31,6 +32,7 @@ function buildCatalog(): ToolCatalog {
 
   const categories: ToolCategory[] = [
     { name: "Test Cases", tools: createTestCaseTools(noopClient as never).tools },
+    { name: "Shared Steps", tools: createSharedStepTools(noopClient as never).tools },
     { name: "Launches", tools: createLaunchTools(noopClient as never).tools },
     { name: "Test Results", tools: createTestResultTools(noopClient as never).tools },
     { name: "Test Plans", tools: createTestPlanTools(noopClient as never).tools },
