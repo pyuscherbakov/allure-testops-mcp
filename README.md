@@ -12,7 +12,7 @@ Production-ready MCP server for Allure TestOps focused on test cases, launches, 
 
 ## Tool Coverage
 
-- Test cases: list, search, get, create, update, delete, restore, overview, history, scenario, tags, issues, custom fields
+- Test cases: list, search, get, create, update, delete, restore, overview, history, scenario, steps, shared steps, tags, issues, custom fields
 - Launches: list, search, get, create, update, delete, close, reopen, statistics, progress, add test cases/plans
 - Test results: list, search, get, create, update, history, assign, resolve
 - Test plans: list, get, create, update, delete, run
