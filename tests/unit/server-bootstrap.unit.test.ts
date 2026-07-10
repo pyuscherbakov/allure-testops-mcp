@@ -48,6 +48,7 @@ const EXPECTED_READ_ONLY = [
   "get_test_case_overview",
   "get_test_case_history",
   "get_test_case_scenario",
+  "get_test_case_steps",
   "get_test_case_tags",
   "get_test_case_issues",
   "list_project_custom_fields",
@@ -70,7 +71,7 @@ const EXPECTED_READ_ONLY = [
   "get_test_plan",
 ];
 
-const EXPECTED_TOTAL_TOOLS = 53;
+const EXPECTED_TOTAL_TOOLS = 54;
 
 describe("buildToolRegistry", () => {
   it("exposes both read and mutating tools by default", () => {

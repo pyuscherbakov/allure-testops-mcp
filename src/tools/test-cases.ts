@@ -360,6 +360,17 @@ export function createTestCaseTools(
       annotations: { readOnlyHint: true },
     },
     {
+      name: "get_test_case_steps",
+      description:
+        "Get design-time scenario steps for a test case (works for manual test cases where get_test_case_scenario returns empty; steps may reference shared steps via sharedStepId).",
+      inputSchema: {
+        type: "object" as const,
+        properties: { id: { type: "number" } },
+        required: ["id"],
+      },
+      annotations: { readOnlyHint: true },
+    },
+    {
       name: "get_test_case_tags",
       description: "Get tags assigned to a test case.",
       inputSchema: {
@@ -686,6 +697,10 @@ export function createTestCaseTools(
     get_test_case_scenario: async (rawArgs: unknown) => {
       const args = asObject(rawArgs);
       return api.getTestCaseScenario(client, getRequiredId(args));
+    },
+    get_test_case_steps: async (rawArgs: unknown) => {
+      const args = asObject(rawArgs);
+      return api.getTestCaseSteps(client, getRequiredId(args));
     },
     get_test_case_tags: async (rawArgs: unknown) => {
       const args = asObject(rawArgs);

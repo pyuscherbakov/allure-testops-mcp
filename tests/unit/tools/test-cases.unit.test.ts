@@ -22,6 +22,7 @@ vi.mock("../../../src/api/test-cases.js", () => ({
   getTestCaseOverview: vi.fn(),
   getTestCaseHistory: vi.fn(),
   getTestCaseScenario: vi.fn(),
+  getTestCaseSteps: vi.fn(),
   getTestCaseTags: vi.fn(),
   setTestCaseTags: vi.fn(),
   getTestCaseIssues: vi.fn(),
@@ -155,6 +156,13 @@ describe("createTestCaseTools", () => {
       sort: undefined,
     });
     expect(api.getTestCaseScenario).toHaveBeenCalledWith(client, 20);
+  });
+
+  it("get_test_case_steps forwards id", async () => {
+    const bundle = createTestCaseTools(client as never);
+    vi.mocked(api.getTestCaseSteps).mockResolvedValueOnce({});
+    await bundle.handlers.get_test_case_steps({ id: 20 });
+    expect(api.getTestCaseSteps).toHaveBeenCalledWith(client, 20);
   });
 
   it("tags and issues handlers use testCaseId and payload", async () => {
